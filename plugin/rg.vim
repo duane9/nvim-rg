@@ -14,7 +14,7 @@ endif
 
 let s:chunks = [""]
 let s:error = 0
-let s:ag_job = 0
+let s:rg_job = 0
 
 function! s:Alert(msg)
   echohl WarningMsg | echomsg a:msg | echohl None
@@ -27,7 +27,7 @@ function! s:ShowResults(data)
   let s:chunks = [""]
 endfunction
 
-function! s:AgEvent(job_id, data, event) dict
+function! s:RgEvent(job_id, data, event) dict
   let msg = "Error: Pattern " . self.pattern . " not found"
   if a:event == "stdout"
     let s:chunks[-1] .= a:data[0]
@@ -40,11 +40,11 @@ function! s:AgEvent(job_id, data, event) dict
       let s:error = 0
       return
     endif
-    if s:ag_job == 0
+    if s:rg_job == 0
       let s:chunks = [""]
       return
     endif
-    let s:ag_job = 0
+    let s:rg_job = 0
     if s:chunks[0] == ""
       call s:Alert(msg)
       return
@@ -56,9 +56,9 @@ endfunction
 
 function! s:RunCmd(cmd, pattern)
   " Stop any long-running jobs before starting a new one
-  if s:ag_job isnot 0
-    call jobstop(s:ag_job)
-    let s:ag_job = 0
+  if s:rg_job isnot 0
+    call jobstop(s:rg_job)
+    let s:rg_job = 0
     call s:Alert("Search interrupted. Please try your search again.")
     return
   endif
@@ -66,12 +66,12 @@ function! s:RunCmd(cmd, pattern)
   if has("nvim") && g:rg_run_async isnot 0
     call s:Alert("Searching ...")
     let opts = {
-    \ "on_stdout": function("s:AgEvent"),
-    \ "on_stderr": function("s:AgEvent"),
-    \ "on_exit": function("s:AgEvent"),
+    \ "on_stdout": function("s:RgEvent"),
+    \ "on_stderr": function("s:RgEvent"),
+    \ "on_exit": function("s:RgEvent"),
     \ "pattern": a:pattern
     \ }
-    let s:ag_job = jobstart(a:cmd, opts)
+    let s:rg_job = jobstart(a:cmd, opts)
     return
   endif
   " Run w/o async if Vim

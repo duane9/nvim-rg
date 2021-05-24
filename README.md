@@ -42,7 +42,7 @@ Plug 'duane9/nvim-rg'
 
 ## Configuration
 
-Specify a custom path and in your vimrc (not required):
+Specify a custom path in your vimrc (not required):
 
 ```vim
 " Default is 'rg --vimgrep'
