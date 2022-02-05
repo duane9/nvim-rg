@@ -7,6 +7,10 @@ if !exists("rg_command")
   let rg_command = "rg --vimgrep"
 endif
 
+if !exists("default_dir")
+  let default_dir = "./"
+endif
+
 " Change to 0 if you don't want the command to run asynchronously on Neovim
 if !exists("rg_run_async")
   let rg_run_async = 1
@@ -64,7 +68,7 @@ function! s:RunCmd(cmd, pattern)
   endif
   " Run async if Neovim
   if has("nvim") && g:rg_run_async isnot 0
-    call s:Alert("Searching ...")
+    call s:Alert("Searching...")
     let opts = {
     \ "on_stdout": function("s:RgEvent"),
     \ "on_stderr": function("s:RgEvent"),
@@ -86,7 +90,7 @@ endfunction
 
 function! s:RunRg(cmd)
   if len(a:cmd) > 0
-    let cmd_options = g:rg_command . " " . a:cmd
+    let cmd_options = g:rg_command . " " . a:cmd . " " . g:default_dir
     call s:RunCmd(cmd_options, "")
     return
   endif
