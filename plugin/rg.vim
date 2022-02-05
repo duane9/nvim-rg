@@ -1,6 +1,6 @@
 " nvim-rg
 " Author: Duane Hilton <https://github.com/duane9/>
-" Version: 0.9.0
+" Version: 0.9.1
 
 " Path to rg
 if !exists("rg_command")
