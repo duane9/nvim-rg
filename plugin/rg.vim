@@ -1,6 +1,6 @@
 " nvim-rg
 " Author: Duane Hilton <https://github.com/duane9/>
-" Version: 0.9.1
+" Version: 0.9.2
 
 " Path to rg
 if !exists("rg_command")
@@ -91,6 +91,13 @@ endfunction
 function! s:RunRg(cmd)
   if len(a:cmd) > 0
     let cmd_options = g:rg_command . " " . a:cmd . " " . g:default_dir
+    let cmd_parts = split(a:cmd)
+    if len(cmd_parts) > 1
+      if cmd_parts[-1][0] != '-' && cmd_parts[-2][0] != '-'
+        " cmd contains directory; don't use default_dir
+        let cmd_options = g:rg_command . " " . a:cmd
+      endif
+    endif
     call s:RunCmd(cmd_options, "")
     return
   endif
