@@ -46,8 +46,11 @@ Specify a custom path in your vimrc (not required):
 
 ```vim
 " Default is 'rg --vimgrep'
-let g:rg_path = "<custom-rg-path-goes-here>"
+let g:rg_path = '<custom-rg-path-goes-here>'
 ```
+
+Also, see `:help nvim-rg`.
+
 
 ## License
 
