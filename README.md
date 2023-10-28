@@ -14,7 +14,7 @@ the {pattern}.
     :Rg [options] {pattern} [{directory}]
 
 When run without arguments, you will be prompted for a pattern, directory, and
-files pattern.
+file type.
 
     :Rg
 
