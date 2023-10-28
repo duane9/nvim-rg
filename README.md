@@ -36,13 +36,12 @@ Install this plugin using [vim-plug](https://github.com/junegunn/vim-plug) (or
 your favorite package manager):
 
 ```vim
-" Add this line to your vimrc
 Plug 'duane9/nvim-rg'
 ```
 
 ## Configuration
 
-Specify a custom path in your vimrc (not required):
+Specify a custom path (not required):
 
 ```vim
 " Default is 'rg --vimgrep'
