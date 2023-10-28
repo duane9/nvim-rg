@@ -116,7 +116,7 @@ function! s:RunRg(cmd)
     let ftype = " -t" . ftype
   endif
   echo "\r"
-  let cmd = g:rg_command . ftype . " '" . pattern  . "' " . startdir
+  let cmd = g:rg_command . ftype . " '" . pattern . "' " . startdir
   call s:RunCmd(cmd, pattern)
 endfunction
 
