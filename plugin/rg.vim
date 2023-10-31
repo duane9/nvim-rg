@@ -98,7 +98,7 @@ function! s:RunRg(cmd)
         let cmd_options = g:rg_command . " " . a:cmd
       endif
     endif
-    call s:RunCmd(cmd_options, "")
+    call s:RunCmd(cmd_options, a:cmd)
     return
   endif
   let pattern = input("Search for pattern: ")
