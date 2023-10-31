@@ -35,7 +35,7 @@ function! s:RgEvent(job_id, data, event) dict
   let msg = "Error: Pattern " . self.pattern . " not found"
   if a:event == "stdout"
     let s:chunks[-1] .= a:data[0]
-    call extend(s:chunks, a:data[1:])
+    call extend(s:chunks, a:data[1:-1])
   elseif a:event == "on_stderr"
     let s:error = 1
     call s:Alert(msg)
