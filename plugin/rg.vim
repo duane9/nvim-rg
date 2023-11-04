@@ -31,6 +31,22 @@ function! s:ShowResults(data)
   let s:chunks = [""]
 endfunction
 
+function! s:RemoveTrailingEmptyLines(lines)
+  let l:last_index_with_text = -1
+
+  for l:item in a:lines
+    if l:item != ""
+      let l:last_index_with_text += 1
+    endif
+  endfor
+
+  if l:last_index_with_text == -1
+    return a:lines
+  endif
+
+  return a:lines[0:l:last_index_with_text]
+endfunction
+
 function! s:RgEvent(job_id, data, event) dict
   let msg = "Error: Pattern " . self.pattern . " not found"
   if a:event == "stdout"
@@ -54,7 +70,7 @@ function! s:RgEvent(job_id, data, event) dict
       return
     endif
     call s:Alert("")
-    call s:ShowResults(s:chunks)
+    call s:ShowResults(s:RemoveTrailingEmptyLines(s:chunks))
   endif
 endfunction
 
