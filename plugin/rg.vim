@@ -1,6 +1,6 @@
 " nvim-rg
 " Author: Duane Hilton <https://github.com/duane9/>
-" Version: 0.9.4
+" Version: 0.9.5
 
 " Path to rg
 if !exists("rg_command")
@@ -33,17 +33,14 @@ endfunction
 
 function! s:RemoveTrailingEmptyLines(lines)
   let l:last_index_with_text = -1
-
   for l:item in a:lines
     if l:item != ""
       let l:last_index_with_text += 1
     endif
   endfor
-
   if l:last_index_with_text == -1
     return a:lines
   endif
-
   return a:lines[0:l:last_index_with_text]
 endfunction
 
