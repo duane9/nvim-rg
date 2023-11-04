@@ -28,12 +28,12 @@ To search for the word under the cursor use:
 
 ## Installation
 
-This plugin requires ripgrep and works on macOS. Install ripgrep:
+Install ripgrep:
 
     brew install ripgrep
 
 Install this plugin using [vim-plug](https://github.com/junegunn/vim-plug) (or
-your favorite package manager):
+your favorite plugin manager):
 
 ```vim
 Plug 'duane9/nvim-rg'
