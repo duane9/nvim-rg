@@ -41,12 +41,14 @@ Plug 'duane9/nvim-rg'
 
 ## Configuration
 
-Specify a custom path (not required):
+Specify a custom base command (optional):
 
 ```vim
 " Default is 'rg --vimgrep'
-let g:rg_path = '<custom-rg-path-goes-here>'
+let g:rg_command = '<custom-command-goes-here>'
 ```
+
+---
 
 Also, see `:help nvim-rg`.
 
