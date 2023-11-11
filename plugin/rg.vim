@@ -136,7 +136,7 @@ function! s:RunCmd(cmd, pattern)
   " Run w/o async if Vim
   let l:cmd_output = system(a:cmd)
   if l:cmd_output == ""
-    let l:msg = "Error: Pattern " . '"' . self.pattern . '"' . " not found"
+    let l:msg = "Error: Pattern " . '"' . a:pattern . '"' . " not found"
     call s:Alert(l:msg)
     return
   endif
