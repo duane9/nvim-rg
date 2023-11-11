@@ -2,7 +2,6 @@
 " Author: Duane Hilton <https://github.com/duane9/>
 " Version: 0.9.6
 
-" Path to rg
 if !exists("rg_command")
   let rg_command = "rg --vimgrep"
 endif
@@ -31,21 +30,64 @@ function! s:ShowResults(data)
   let s:chunks = [""]
 endfunction
 
-function! s:RemoveTrailingEmptyLines(lines)
-  let l:last_index_with_text = -1
-  for l:item in a:lines
-    if l:item != ""
-      let l:last_index_with_text += 1
-    endif
-  endfor
-  if l:last_index_with_text == -1
-    return a:lines
+function! s:RemoveTrailingEmptyLine(lines)
+  if len(a:lines) > 1 && a:lines[-1] == ""
+    return a:lines[0:-2]
   endif
-  return a:lines[0:l:last_index_with_text]
+  return a:lines
+endfunction
+
+function! s:HasDirectory(cmd)
+  let l:options = [
+  \ '-t',
+  \ '--type',
+  \ '-T',
+  \ '--type-not',
+  \ '-r',
+  \ '--replace',
+  \ '--max-filesize',
+  \ '-m',
+  \ '--max-count',
+  \ '--max-depth',
+  \ '-M',
+  \ '--max-columns',
+  \ '--ignore-file',
+  \ '--iglob',
+  \ '-g',
+  \ '--glob',
+  \ '-f',
+  \ '--file',
+  \ '-E',
+  \ '--encoding',
+  \ '-A',
+  \ '--after-context',
+  \ '-B',
+  \ '--before-context'
+  \ ]
+  let l:cmd_parts = split(a:cmd)
+  let l:has_dir = 0
+  if len(l:cmd_parts) > 3 &&
+  \ index(l:options, l:cmd_parts[-4]) >= 0 &&
+  \ l:cmd_parts[-1][0] != '-' &&
+  \ l:cmd_parts[-2][0] != '-' &&
+  \ l:cmd_parts[-3][0] != '-'
+    let l:has_dir = 1
+  elseif len(l:cmd_parts) > 2 &&
+  \ l:cmd_parts[-3][0] == '-' &&
+  \ index(l:options, l:cmd_parts[-3]) == -1 &&
+  \ l:cmd_parts[-1][0] != '-' &&
+  \ l:cmd_parts[-2][0] != '-'
+    let l:has_dir = 1
+  elseif len(l:cmd_parts) == 2 &&
+  \ l:cmd_parts[-1][0] != '-' &&
+  \ l:cmd_parts[-2][0] != '-'
+    let l:has_dir = 1
+  endif
+  return l:has_dir
 endfunction
 
 function! s:RgEvent(job_id, data, event) dict
-  let msg = "Error: Pattern " . self.pattern . " not found"
+  let l:msg = "Error: Pattern " . '"' . self.pattern . '"' . " not found"
   if a:event == "stdout"
     let s:chunks[-1] .= a:data[0]
     call extend(s:chunks, a:data[1:])
@@ -63,11 +105,11 @@ function! s:RgEvent(job_id, data, event) dict
     endif
     let s:rg_job = 0
     if s:chunks[0] == ""
-      call s:Alert(msg)
+      call s:Alert(l:msg)
       return
     endif
     call s:Alert("")
-    call s:ShowResults(s:RemoveTrailingEmptyLines(s:chunks))
+    call s:ShowResults(s:RemoveTrailingEmptyLine(s:chunks))
   endif
 endfunction
 
@@ -82,55 +124,52 @@ function! s:RunCmd(cmd, pattern)
   " Run async if Neovim
   if has("nvim") && g:rg_run_async isnot 0
     call s:Alert("Searching...")
-    let opts = {
+    let l:opts = {
     \ "on_stdout": function("s:RgEvent"),
     \ "on_stderr": function("s:RgEvent"),
     \ "on_exit": function("s:RgEvent"),
     \ "pattern": a:pattern
     \ }
-    let s:rg_job = jobstart(a:cmd, opts)
+    let s:rg_job = jobstart(a:cmd, l:opts)
     return
   endif
   " Run w/o async if Vim
-  let cmd_output = system(a:cmd)
-  if cmd_output == ""
-    let msg = "Error: Pattern " . a:pattern . " not found"
-    call s:Alert(msg)
+  let l:cmd_output = system(a:cmd)
+  if l:cmd_output == ""
+    let l:msg = "Error: Pattern " . '"' . self.pattern . '"' . " not found"
+    call s:Alert(l:msg)
     return
   endif
-  call s:ShowResults(cmd_output)
+  call s:ShowResults(l:cmd_output)
 endfunction
 
 function! s:RunRg(cmd)
   if len(a:cmd) > 0
-    let cmd_options = g:rg_command . " " . a:cmd . " " . g:default_dir
-    let cmd_parts = split(a:cmd)
-    if len(cmd_parts) > 1
-      if cmd_parts[-1][0] != '-' && cmd_parts[-2][0] != '-'
-        " cmd contains directory; don't use default_dir
-        let cmd_options = g:rg_command . " " . a:cmd
-      endif
+    let l:cmd_options = g:rg_command . " " . a:cmd . " " . g:default_dir
+    " check if cmd contains directory; don't use default_dir if it does
+    if s:HasDirectory(a:cmd)
+      let l:cmd_options = g:rg_command . " " . a:cmd
     endif
-    call s:RunCmd(cmd_options, a:cmd)
+    call s:RunCmd(l:cmd_options, a:cmd)
     return
   endif
-  let pattern = input("Search for pattern: ")
-  if pattern == ""
-    return
-  endif
-  echo "\r"
-  let startdir = input("Start searching from directory: ", "./")
-  if startdir == ""
+  let l:pattern = input("Search for pattern: ")
+  if l:pattern == ""
     return
   endif
   echo "\r"
-  let ftype = input("File type (optional): ", "")
-  if ftype != ""
-    let ftype = " -t" . ftype
+  let l:startdir = input("Start searching from directory: ", "./")
+  if l:startdir == ""
+    return
   endif
   echo "\r"
-  let cmd = g:rg_command . ftype . " '" . pattern . "' " . startdir
-  call s:RunCmd(cmd, pattern)
+  let l:ftype = input("File type (optional): ", "")
+  if l:ftype != ""
+    let l:ftype = " -t " . l:ftype
+  endif
+  echo "\r"
+  let l:cmd = g:rg_command . l:ftype . " '" . l:pattern . "' " . l:startdir
+  call s:RunCmd(l:cmd, l:pattern)
 endfunction
 
 command! -nargs=? -complete=file Rg call s:RunRg(<q-args>)
