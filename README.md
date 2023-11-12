@@ -1,10 +1,8 @@
 # nvim-rg
 
 nvim-rg allows you to run ripgrep from Neovim or Vim and shows the results in a
-quickfix window.
-
-It was developed for use on macOS with Neovim. On Neovim, it runs
-asynchronously. On Vim, it runs synchronously.
+quickfix window. It was developed for use on macOS with Neovim. On Neovim, it runs
+asynchronously.
 
 ## Usage
 
@@ -45,12 +43,12 @@ Specify a custom base command (optional):
 
 ```vim
 " Default is 'rg --vimgrep'
-let g:rg_command = '<custom-command-goes-here>'
+let g:rg_command = '<command-goes-here>'
 ```
 
----
+## Docs
 
-Also, see `:help nvim-rg`.
+See `:help nvim-rg`.
 
 
 ## License
