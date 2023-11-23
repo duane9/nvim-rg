@@ -1,6 +1,6 @@
 " nvim-rg
 " Author: Duane Hilton <https://github.com/duane9/>
-" Version: 0.9.9
+" Version: 1.0.0
 
 if !exists("rg_command")
   let rg_command = "rg --vimgrep"
@@ -80,7 +80,7 @@ function! s:HasDirectory(cmd)
   let l:has_dir = 0
   if s:HasQuote(l:cmd_parts[-1])
     let l:has_dir = 0
-  elseif len(l:cmd_parts) > 1 && s:HasQuote(l:cmd_parts[-2])
+  elseif len(l:cmd_parts) > 1 && s:HasQuote(l:cmd_parts[-2]) && s:NotOption(l:cmd_parts[-1])
     let l:has_dir = 1
   elseif len(l:cmd_parts) > 3 &&
   \ index(l:options, l:cmd_parts[-4]) >= 0 &&
