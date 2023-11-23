@@ -66,7 +66,9 @@ function! s:HasDirectory(cmd)
   \ ]
   let l:cmd_parts = split(a:cmd)
   let l:has_dir = 0
-  if len(l:cmd_parts) > 3 &&
+  if len(matchstr(l:cmd_parts[-1], '^.*"$')) || len(matchstr(l:cmd_parts[-1], "^.*'$"))
+    let l:has_dir = 0
+  elseif len(l:cmd_parts) > 3 &&
   \ index(l:options, l:cmd_parts[-4]) >= 0 &&
   \ l:cmd_parts[-1][0] != '-' &&
   \ l:cmd_parts[-2][0] != '-' &&
