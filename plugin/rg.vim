@@ -1,6 +1,6 @@
 " nvim-rg
 " Author: Duane Hilton <https://github.com/duane9/>
-" Version: 0.9.8
+" Version: 0.9.9
 
 if !exists("rg_command")
   let rg_command = "rg --vimgrep"
