@@ -42,16 +42,9 @@ Plug 'duane9/nvim-rg'
 Specify a custom base command (optional):
 
 ```vim
-" Default is 'rg --vimgrep'
-let g:rg_command = '<command-goes-here>'
+let g:rg_command = 'rg --vimgrep'
 ```
 
 ## Docs
 
 See `:help nvim-rg`.
-
-
-## License
-
-Copyright (c) Duane Hilton. Distributed under the same terms as Vim/Neovim. See
-`:help license`.
