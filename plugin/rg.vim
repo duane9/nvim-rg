@@ -37,6 +37,18 @@ function! s:RemoveTrailingEmptyLine(lines)
   return a:lines
 endfunction
 
+function! s:HasQuote(item)
+  return len(matchstr(a:item, '^.*"$')) || len(matchstr(a:item, "^.*'$"))
+endfunction
+
+function! s:NotOption(item)
+  return len(a:item) && a:item[0] != '-'
+endfunction
+
+function! s:IsOption(item)
+  return len(a:item) && a:item[0] == '-'
+endfunction
+
 function! s:HasDirectory(cmd)
   let l:options = [
   \ '-t',
@@ -66,30 +78,32 @@ function! s:HasDirectory(cmd)
   \ ]
   let l:cmd_parts = split(a:cmd)
   let l:has_dir = 0
-  if len(matchstr(l:cmd_parts[-1], '^.*"$')) || len(matchstr(l:cmd_parts[-1], "^.*'$"))
+  if s:HasQuote(l:cmd_parts[-1])
     let l:has_dir = 0
+  elseif len(l:cmd_parts) > 1 && s:HasQuote(l:cmd_parts[-2])
+    let l:has_dir = 1
   elseif len(l:cmd_parts) > 3 &&
   \ index(l:options, l:cmd_parts[-4]) >= 0 &&
-  \ l:cmd_parts[-1][0] != '-' &&
-  \ l:cmd_parts[-2][0] != '-' &&
-  \ l:cmd_parts[-3][0] != '-'
+  \ s:NotOption(l:cmd_parts[-1])  &&
+  \ s:NotOption(l:cmd_parts[-2]) &&
+  \ s:NotOption(l:cmd_parts[-3])
     let l:has_dir = 1
   elseif len(l:cmd_parts) > 2 &&
-  \ l:cmd_parts[-3][0] == '-' &&
+  \ s:IsOption(l:cmd_parts[-3]) &&
   \ index(l:options, l:cmd_parts[-3]) == -1 &&
-  \ l:cmd_parts[-1][0] != '-' &&
-  \ l:cmd_parts[-2][0] != '-'
+  \ s:NotOption(l:cmd_parts[-1]) &&
+  \ s:NotOption(l:cmd_parts[-2])
     let l:has_dir = 1
   elseif len(l:cmd_parts) == 2 &&
-  \ l:cmd_parts[-1][0] != '-' &&
-  \ l:cmd_parts[-2][0] != '-'
+  \ s:NotOption(l:cmd_parts[-1]) &&
+  \ s:NotOption(l:cmd_parts[-2])
     let l:has_dir = 1
   endif
   return l:has_dir
 endfunction
 
 function! s:RgEvent(job_id, data, event) dict
-  let l:msg = "Error: Pattern " . '"' . self.pattern . '"' . " not found"
+  let l:msg = "Error: Pattern " . "- " . self.pattern . " -" . " not found"
   if a:event == "stdout"
     let s:chunks[-1] .= a:data[0]
     call extend(s:chunks, a:data[1:])
@@ -138,7 +152,7 @@ function! s:RunCmd(cmd, pattern)
   " Run w/o async if Vim
   let l:cmd_output = system(a:cmd)
   if l:cmd_output == ""
-    let l:msg = "Error: Pattern " . '"' . a:pattern . '"' . " not found"
+    let l:msg = "Error: Pattern " . "- " . a:pattern . " -" . " not found"
     call s:Alert(l:msg)
     return
   endif
