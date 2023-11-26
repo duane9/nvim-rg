@@ -60,6 +60,7 @@ function! s:HasDirectory(cmd)
   \ '--max-filesize',
   \ '-m',
   \ '--max-count',
+  \ '-d',
   \ '--max-depth',
   \ '-M',
   \ '--max-columns',
