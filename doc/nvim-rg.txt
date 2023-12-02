@@ -20,7 +20,6 @@ COMMANDS                                        *nvim-rg-commands*
 :Rg                     When run without arguments, you will be prompted for a
                         pattern, directory, and file type.
 
-
 <leader>rg              Same as :Rg
 
 <leader>rw              Search for the word under the cursor.
