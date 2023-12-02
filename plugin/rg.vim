@@ -23,8 +23,9 @@ function! s:Alert(msg)
   echohl WarningMsg | echomsg a:msg | echohl None
 endfunction
 
-function! s:ShowResults(data)
+function! s:ShowResults(data, title)
   call setqflist([])
+  call setqflist([], 'r', {'context': 'file_search', 'title': a:title})
   caddexpr a:data
   copen
   let s:chunks = [""]
@@ -126,7 +127,7 @@ function! s:RgEvent(job_id, data, event) dict
       return
     endif
     call s:Alert("")
-    call s:ShowResults(s:RemoveTrailingEmptyLine(s:chunks))
+    call s:ShowResults(s:RemoveTrailingEmptyLine(s:chunks), self.cmd)
   endif
 endfunction
 
@@ -145,7 +146,8 @@ function! s:RunCmd(cmd, pattern)
     \ "on_stdout": function("s:RgEvent"),
     \ "on_stderr": function("s:RgEvent"),
     \ "on_exit": function("s:RgEvent"),
-    \ "pattern": a:pattern
+    \ "pattern": a:pattern,
+    \ "cmd": a:cmd
     \ }
     let s:rg_job = jobstart(a:cmd, l:opts)
     return
@@ -157,7 +159,7 @@ function! s:RunCmd(cmd, pattern)
     call s:Alert(l:msg)
     return
   endif
-  call s:ShowResults(l:cmd_output)
+  call s:ShowResults(l:cmd_output, a:cmd)
 endfunction
 
 function! s:RunRg(cmd)
