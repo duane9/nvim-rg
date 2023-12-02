@@ -127,7 +127,7 @@ function! s:RgEvent(job_id, data, event) dict
       return
     endif
     call s:Alert("")
-    call s:ShowResults(s:RemoveTrailingEmptyLine(s:chunks), "Rg: " . self.pattern)
+    call s:ShowResults(s:RemoveTrailingEmptyLine(s:chunks), self.cmd)
   endif
 endfunction
 
@@ -146,7 +146,8 @@ function! s:RunCmd(cmd, pattern)
     \ "on_stdout": function("s:RgEvent"),
     \ "on_stderr": function("s:RgEvent"),
     \ "on_exit": function("s:RgEvent"),
-    \ "pattern": a:pattern
+    \ "pattern": a:pattern,
+    \ "cmd": a:cmd
     \ }
     let s:rg_job = jobstart(a:cmd, l:opts)
     return
@@ -158,7 +159,7 @@ function! s:RunCmd(cmd, pattern)
     call s:Alert(l:msg)
     return
   endif
-  call s:ShowResults(l:cmd_output, a:pattern)
+  call s:ShowResults(l:cmd_output, a:cmd)
 endfunction
 
 function! s:RunRg(cmd)
