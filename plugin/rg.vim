@@ -31,6 +31,12 @@ function! s:ShowResults(data, title)
   let s:chunks = [""]
 endfunction
 
+function! s:RemoveLeadingRelativePath(lines)
+  call map(a:lines, 'substitute(v:val, "^\\.[\\/\\\\]", "", "")')
+
+  return a:lines
+endfunction
+
 function! s:RemoveTrailingEmptyLine(lines)
   if len(a:lines) > 1 && a:lines[-1] == ""
     return a:lines[0:-2]
@@ -127,7 +133,10 @@ function! s:RgEvent(job_id, data, event) dict
       return
     endif
     call s:Alert("")
-    call s:ShowResults(s:RemoveTrailingEmptyLine(s:chunks), self.cmd)
+    let s:chunks = s:RemoveTrailingEmptyLine(s:chunks)
+    let s:chunks = s:RemoveLeadingRelativePath(s:chunks)
+
+    call s:ShowResults(s:chunks, self.cmd)
   endif
 endfunction
 
