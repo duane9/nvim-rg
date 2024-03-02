@@ -19,6 +19,17 @@ let s:chunks = [""]
 let s:error = 0
 let s:rg_job = 0
 
+function! s:ProcessLines(lines)
+  let l:lines_copy = copy(a:lines)
+  " Remove trailing empty line
+  if len(l:lines_copy) > 1 && l:lines_copy[-1] == ""
+    let l:lines_copy = l:lines_copy[0:-2]
+  endif
+  " Remove leading relative path
+  call map(l:lines_copy, 'substitute(v:val, "^\\.[\\/\\\\]", "", "")')
+  return l:lines_copy
+endfunction
+
 function! s:Alert(msg)
   echohl WarningMsg | echomsg a:msg | echohl None
 endfunction
@@ -29,19 +40,6 @@ function! s:ShowResults(data, title)
   caddexpr a:data
   copen
   let s:chunks = [""]
-endfunction
-
-function! s:RemoveLeadingRelativePath(lines)
-  call map(a:lines, 'substitute(v:val, "^\\.[\\/\\\\]", "", "")')
-
-  return a:lines
-endfunction
-
-function! s:RemoveTrailingEmptyLine(lines)
-  if len(a:lines) > 1 && a:lines[-1] == ""
-    return a:lines[0:-2]
-  endif
-  return a:lines
 endfunction
 
 function! s:HasQuote(item)
@@ -133,9 +131,7 @@ function! s:RgEvent(job_id, data, event) dict
       return
     endif
     call s:Alert("")
-    let s:chunks = s:RemoveTrailingEmptyLine(s:chunks)
-    let s:chunks = s:RemoveLeadingRelativePath(s:chunks)
-
+    let s:chunks = s:ProcessLines(s:chunks)
     call s:ShowResults(s:chunks, self.cmd)
   endif
 endfunction
