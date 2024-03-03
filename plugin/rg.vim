@@ -27,7 +27,7 @@ function! s:ProcessLines(lines)
   endif
   " Remove leading relative path
   call map(l:lines_copy, 'substitute(v:val, "^\\.[\\/\\\\]", "", "")')
-  call sort(l:lines_copy)
+  call sort(l:lines_copy, 'i')
   return l:lines_copy
 endfunction
 
