@@ -36,9 +36,10 @@ function! s:Alert(msg)
 endfunction
 
 function! s:ShowResults(data, title)
+  let l:processed_data = s:ProcessLines(a:data)
   call setqflist([])
   call setqflist([], 'r', {'context': 'file_search', 'title': a:title})
-  caddexpr a:data
+  caddexpr l:processed_data
   copen
   let s:chunks = [""]
 endfunction
@@ -132,7 +133,6 @@ function! s:RgEvent(job_id, data, event) dict
       return
     endif
     call s:Alert("")
-    let s:chunks = s:ProcessLines(s:chunks)
     call s:ShowResults(s:chunks, self.cmd)
   endif
 endfunction
@@ -159,8 +159,8 @@ function! s:RunCmd(cmd, pattern)
     return
   endif
   " Run w/o async if Vim
-  let l:cmd_output = system(a:cmd)
-  if l:cmd_output == ""
+  let l:cmd_output = systemlist(a:cmd)
+  if l:cmd_output == []
     let l:msg = "Error: Pattern " . "- " . a:pattern . " -" . " not found"
     call s:Alert(l:msg)
     return
