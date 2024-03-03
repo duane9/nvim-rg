@@ -1,6 +1,6 @@
 " nvim-rg
 " Author: Duane Hilton <https://github.com/duane9/>
-" Version: 1.0.3
+" Version: 1.0.4
 
 if !exists("rg_command")
   let rg_command = "rg --vimgrep"
@@ -27,6 +27,7 @@ function! s:ProcessLines(lines)
   endif
   " Remove leading relative path
   call map(l:lines_copy, 'substitute(v:val, "^\\.[\\/\\\\]", "", "")')
+  call sort(l:lines_copy)
   return l:lines_copy
 endfunction
 
