@@ -39,10 +39,23 @@ Plug 'duane9/nvim-rg'
 
 ## Configuration
 
-Specify a custom base command (optional):
+Specify a custom base command. By default, `rg_command` is set to `rg --vimgrep`:
 
 ```vim
 let g:rg_command = 'rg --vimgrep'
+```
+
+By default, `rg_run_async` is set to `1` to allow this plugin to run asynchronously on Neovim. If you want to run it synchronously, set `rg_run_async` to `0`:
+
+```vim
+" Change to 0 to run synchronously
+let g:rg_run_async = 1
+```
+
+By default, this plugin uses the current working directory as the base directory for the search. You can change that by changing `default_dir`:
+
+```vim
+let g:default_dir = './'
 ```
 
 ## Docs
