@@ -6,8 +6,8 @@ if !exists("rg_command")
   let rg_command = "rg --vimgrep"
 endif
 
-if !exists("default_dir")
-  let default_dir = "./"
+if !exists("rg_default_dir")
+  let rg_default_dir = "./"
 endif
 
 " Change to 0 if you don't want the command to run asynchronously on Neovim
@@ -170,8 +170,8 @@ endfunction
 
 function! s:RunRg(cmd)
   if len(a:cmd) > 0
-    let l:cmd_options = g:rg_command . " " . a:cmd . " " . g:default_dir
-    " check if cmd contains directory; don't use default_dir if it does
+    let l:cmd_options = g:rg_command . " " . a:cmd . " " . g:rg_default_dir
+    " check if cmd contains directory; don't use rg_default_dir if it does
     if s:HasDirectory(a:cmd)
       let l:cmd_options = g:rg_command . " " . a:cmd
     endif

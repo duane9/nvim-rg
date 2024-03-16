@@ -52,10 +52,10 @@ By default, `rg_run_async` is set to `1` to allow this plugin to run asynchronou
 let g:rg_run_async = 1
 ```
 
-By default, this plugin uses the current working directory as the base directory for the search. You can change that by changing `default_dir`:
+By default, this plugin uses the current working directory as the base directory for the search. You can change that by changing `rg_default_dir`:
 
 ```vim
-let g:default_dir = './'
+let g:rg_default_dir = './'
 ```
 
 ## Docs
