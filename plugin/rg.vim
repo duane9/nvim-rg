@@ -1,6 +1,6 @@
 " nvim-rg
 " Author: Duane Hilton <https://github.com/duane9/>
-" Version: 1.0.7
+" Version: 1.0.8
 
 if !exists("rg_command")
   let rg_command = "rg --vimgrep"
@@ -13,6 +13,11 @@ endif
 " Change to 0 if you don't want the command to run asynchronously on Neovim
 if !exists("rg_run_async")
   let rg_run_async = 1
+endif
+
+" Change to 0 if you don't want the default mappings
+if !exists("g:rg_map_keys")
+  let g:rg_map_keys = 1
 endif
 
 let s:chunks = [""]
@@ -198,6 +203,8 @@ function! s:RunRg(cmd)
 endfunction
 
 command! -nargs=? -complete=file Rg call s:RunRg(<q-args>)
-map <leader>rg :Rg<CR>
-" Use Rg to search for word under cursor
-map <leader>rw :Rg <cword><CR>
+
+if g:rg_map_keys
+  map <leader>rg :Rg<CR>
+  map <leader>rw :Rg <cword><CR>
+endif
