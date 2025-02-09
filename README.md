@@ -45,6 +45,11 @@ Specify a custom base command. By default, `rg_command` is set to `rg --vimgrep`
 let g:rg_command = 'rg --vimgrep'
 ```
 
+You may want to use your own key mappings. To turn off the default mappings:
+
+```vim
+let g:rg_map_keys = 0
+```
 
 ## Docs
 
