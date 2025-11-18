@@ -224,7 +224,7 @@ function! s:RunRg(cmd)
     let l:ftype = " -t " . l:ftype
   endif
   echo "\r"
-  let l:cmd = g:rg_command . l:ftype . " '" . l:pattern . "' " . l:startdir
+  let l:cmd = g:rg_command . l:ftype . " " . shellescape(l:pattern) . " " . l:startdir
   call s:RunCmd(l:cmd, l:pattern)
 endfunction
 
