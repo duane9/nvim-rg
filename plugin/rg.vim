@@ -45,7 +45,7 @@ function! s:ShowResults(data, title)
   call setqflist([])
   call setqflist([], 'r', {'context': 'file_search', 'title': a:title})
   caddexpr l:processed_data
-  botright copen
+  copen
   let s:chunks = [""]
 endfunction
 
