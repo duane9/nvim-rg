@@ -175,36 +175,10 @@ endfunction
 
 function! s:RunRg(cmd)
   if len(a:cmd) > 0
-    " Parse command to separate options, pattern, and directory
-    let l:cmd_parts = split(a:cmd)
-    let l:escaped_parts = []
-    let l:prev_was_option = 0
-    let l:first_non_option_found = 0
-
-    for l:part in l:cmd_parts
-      if l:part =~ '^-'
-        " This is an option flag
-        call add(l:escaped_parts, l:part)
-        let l:prev_was_option = 1
-      elseif l:prev_was_option
-        " This is an option value, don't escape
-        call add(l:escaped_parts, l:part)
-        let l:prev_was_option = 0
-      elseif !l:first_non_option_found
-        " This is the search pattern, escape it
-        call add(l:escaped_parts, shellescape(l:part))
-        let l:first_non_option_found = 1
-      else
-        " This is likely a directory or additional argument
-        call add(l:escaped_parts, l:part)
-      endif
-    endfor
-
-    let l:escaped_cmd = join(l:escaped_parts, ' ')
-    let l:cmd_options = g:rg_command . " " . l:escaped_cmd . " " . g:rg_default_dir
+    let l:cmd_options = g:rg_command . " " . a:cmd . " " . g:rg_default_dir
     " check if cmd contains directory; don't use rg_default_dir if it does
     if s:HasDirectory(a:cmd)
-      let l:cmd_options = g:rg_command . " " . l:escaped_cmd
+      let l:cmd_options = g:rg_command . " " . a:cmd
     endif
     call s:RunCmd(l:cmd_options, a:cmd)
     return
