@@ -1,6 +1,6 @@
 " nvim-rg
 " Author: Duane Hilton <https://github.com/duane9/>
-" Version: 1.0.9
+" Version: 1.1.0
 
 if !exists("rg_command")
   let rg_command = "rg --vimgrep"
@@ -202,7 +202,7 @@ function! s:RunRg(cmd)
   call s:RunCmd(l:cmd, l:pattern)
 endfunction
 
-command! -nargs=+ -complete=file Rg call s:RunRg(<q-args>)
+command! -nargs=* -complete=file Rg call s:RunRg(<q-args>)
 
 if g:rg_map_keys
   map <leader>rg :Rg<CR>
