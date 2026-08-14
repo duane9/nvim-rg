@@ -202,7 +202,7 @@ function! s:RunRg(cmd)
   call s:RunCmd(l:cmd, l:pattern)
 endfunction
 
-command! -nargs=? -complete=file Rg call s:RunRg(<q-args>)
+command! -nargs=+ -complete=file Rg call s:RunRg(<q-args>)
 
 if g:rg_map_keys
   map <leader>rg :Rg<CR>
