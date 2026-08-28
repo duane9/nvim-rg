@@ -45,7 +45,10 @@ function! s:ShowResults(data, title)
   call setqflist([])
   call setqflist([], 'r', {'context': 'file_search', 'title': a:title})
   caddexpr l:processed_data
-  copen
+  if exists('s:origin_win')
+    call win_gotoid(s:origin_win)
+  endif
+  belowright copen
   let s:chunks = [""]
 endfunction
 
@@ -143,6 +146,7 @@ function! s:RgEvent(job_id, data, event) dict
 endfunction
 
 function! s:RunCmd(cmd, pattern)
+  let s:origin_win = win_getid()
   " Stop any long-running jobs before starting a new one
   if s:rg_job isnot 0
     call jobstop(s:rg_job)
